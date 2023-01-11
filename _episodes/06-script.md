@@ -33,11 +33,13 @@ If you come back to your work later (or if someone else finds your work and want
 you will be able to reproduce the same results simply by running your script,
 rather than having to remember or retype a long list of commands.
 
-Let's start by going back to `proteins/` and creating a new file, `middle.sh` which will
+For this example, we'll agin use the `exercise-data/populations` directory containing population time series for six species, from the Living Planet Database of the [Living Planet Index](https://www.livingplanetindex.org/data_portal).
+
+Let's start by going back to `populations/` and creating a new file, `middle.sh`, which will
 become our shell script:
 
 ~~~
-$ cd proteins
+$ cd populations
 $ nano middle.sh
 ~~~
 {: .language-bash}
@@ -48,18 +50,18 @@ If the file does not exist, it will be created.
 We can use the text editor to directly edit the file -- we'll simply insert the following line:
 
 ~~~
-head -n 15 octane.pdb | tail -n 5
+head -n 10 shark.txt | tail -n 2
 ~~~
 {: .source}
 
 This is a variation on the pipe we constructed earlier:
-it selects lines 11-15 of the file `octane.pdb`.
+it selects lines 9-10 of the file `shark.txt`.
 Remember, we are *not* running it as a command just yet:
 we are putting the commands in a file.
 
 Then we save the file (`Ctrl-O` in nano),
  and exit the text editor (`Ctrl-X` in nano).
-Check that the directory `proteins` now contains a file called `middle.sh`.
+Check that the directory `populations` now contains a file called `middle.sh`.
 
 Once we have saved the file,
 we can ask the shell to execute the commands it contains.
@@ -71,11 +73,8 @@ $ bash middle.sh
 {: .language-bash}
 
 ~~~
-ATOM      9  H           1      -4.502   0.681   0.785  1.00  0.00
-ATOM     10  H           1      -5.254  -0.243  -0.537  1.00  0.00
-ATOM     11  H           1      -4.357   1.252  -0.895  1.00  0.00
-ATOM     12  H           1      -3.009  -0.741  -1.467  1.00  0.00
-ATOM     13  H           1      -3.172  -1.337   0.206  1.00  0.00
+19586   Carcharodon_carcharias  0       Dicken_M._L._M._J._Smale_et_al._(2013)._White_sharks_Carcharodon_carcharias_at_Bird_Island_Algoa_Bay_South_Africa._African_Journal_of_Marine_Science_35(2):_175-182     Elasmobranchii  Lamniformes    Lamnidae Carcharodon     carcharias              (Linnaeus_1758) Great_white_shark       Bird_Island_Algoa_Bay_Eastern_Cape      South_Africa    South_Africa    Africa  NULL    NULL    -33.5   25.775554       1       Marine  NULL    NULL   NULL     NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census   NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    0.225   0.487   0       NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+19587   Carcharodon_carcharias  0       Ryklief_R._P._A._Pistorius_et_al._(2014)._Spatial_and_seasonal_patterns_in_sighting_rate_and_life-history_composition_of_the_white_shark_Carcharodon_carcharias_at_Mossel_Bay_South_Africa._African_Journal_of_Marine_Science_36(4):_449-453    Elasmobranchii  Lamniformes     Lamnidae        Carcharodon     carcharias     (Linnaeus_1758)  Great_white_shark       Seal_Island_Mossel_Bay_Western_Cape     South_Africa    South_Africa    Africa NULL     NULL    -34.151089      22.119689       1       Marine  NULL    NULL    NULL    NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census_Feb-Dec   NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    1.6809  1.0745  2.1702 NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
 ~~~
 {: .output}
 
@@ -106,10 +105,10 @@ $ nano middle.sh
 ~~~
 {: .language-bash}
 
-Now, within "nano", replace the text `octane.pdb` with the special variable called `$1`:
+Now, within "nano", replace the text `shark.txt` with the special variable called `$1`:
 
 ~~~
-head -n 15 "$1" | tail -n 5
+head -n 10 "$1" | tail -n 2
 ~~~
 {: .source}
 
@@ -118,32 +117,26 @@ Inside a shell script,
 We can now run our script like this:
 
 ~~~
-$ bash middle.sh octane.pdb
+$ bash middle.sh shark.txt
 ~~~
 {: .language-bash}
 
 ~~~
-ATOM      9  H           1      -4.502   0.681   0.785  1.00  0.00
-ATOM     10  H           1      -5.254  -0.243  -0.537  1.00  0.00
-ATOM     11  H           1      -4.357   1.252  -0.895  1.00  0.00
-ATOM     12  H           1      -3.009  -0.741  -1.467  1.00  0.00
-ATOM     13  H           1      -3.172  -1.337   0.206  1.00  0.00
+19586   Carcharodon_carcharias  0       Dicken_M._L._M._J._Smale_et_al._(2013)._White_sharks_Carcharodon_carcharias_at_Bird_Island_Algoa_Bay_South_Africa._African_Journal_of_Marine_Science_35(2):_175-182     Elasmobranchii  Lamniformes    Lamnidae Carcharodon     carcharias              (Linnaeus_1758) Great_white_shark       Bird_Island_Algoa_Bay_Eastern_Cape      South_Africa    South_Africa    Africa  NULL    NULL    -33.5   25.775554       1       Marine  NULL    NULL   NULL     NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census   NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    0.225   0.487   0       NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+19587   Carcharodon_carcharias  0       Ryklief_R._P._A._Pistorius_et_al._(2014)._Spatial_and_seasonal_patterns_in_sighting_rate_and_life-history_composition_of_the_white_shark_Carcharodon_carcharias_at_Mossel_Bay_South_Africa._African_Journal_of_Marine_Science_36(4):_449-453    Elasmobranchii  Lamniformes     Lamnidae        Carcharodon     carcharias     (Linnaeus_1758)  Great_white_shark       Seal_Island_Mossel_Bay_Western_Cape     South_Africa    South_Africa    Africa NULL     NULL    -34.151089      22.119689       1       Marine  NULL    NULL    NULL    NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census_Feb-Dec   NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    1.6809  1.0745  2.1702 NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
 ~~~
 {: .output}
 
 or on a different file like this:
 
 ~~~
-$ bash middle.sh pentane.pdb
+$ bash middle.sh toad.txt
 ~~~
 {: .language-bash}
 
 ~~~
-ATOM      9  H           1       1.324   0.350  -1.332  1.00  0.00
-ATOM     10  H           1       1.271   1.378   0.122  1.00  0.00
-ATOM     11  H           1      -0.074  -0.384   1.288  1.00  0.00
-ATOM     12  H           1      -0.048  -1.362  -0.205  1.00  0.00
-ATOM     13  H           1      -1.183   0.500  -1.412  1.00  0.00
+9084    Bufo_bufo       0       Cooke_A._S._and_R._S._Oldham_(1995)._Establishment_of_populations_of_the_common_frog_Rana_temporaria_and_common_toad_Bufo_bufo_in_a_newly_created_reserve_following_translocation._Herpetological_Journal_5(1):_173-180.        Amphibia        Anura   Bufonidae       Bufo    bufo    NULL    (Linnaeus_1758) Common_toad     The_Boardwalks_Reserve_north_bank_of_the_River_Nene_near_the_western_edge_of_Peterborough       United_Kingdom  United_Kingdom Europe   Europe_and_Central_Asia Central_and_Western_Europe      52.55444        -0.26444        0       Freshwater     NULL     NULL    Palearctic      Temperate_floodplain_rivers_and_wetlands        NULL    NULL    NULL    0       Peak_total_toad_count   Counts_during_breeding_season   NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    0       NULL    127    311      181     328     306     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL
+18832   Bufo_bufo       0       Jedrzejewska_B._et_al._(2002)._Seasonal_dynamics_and_breeding_of_amphibians_in_pristine_forests_(Bialowieza_National_Park_E_Poland)_in_dry_years._Folia_Zoologica_52(1):_77-86. Amphibia        Anura   Bufonidae       Bufo    bufo            (Linnaeus_1758) Common_toad     Oak-hornbeam-lime_forests_Bia?�owie??a_National_Park_East_Poland        Poland  Poland  Europe  Europe_and_Central_Asia Central_and_Western_Europe      52.75   23.916667      Terrestrial      Palearctic      Temperate_broadleaf_and_mixed_forests   NULL    NULL    NULL    NULL    NULL    0      Number_of_individuals*ha Live_trapping_on_8_30x30m_grids NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    71.5953 45.1319 NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL
 ~~~
 {: .output}
 
@@ -157,7 +150,7 @@ ATOM     13  H           1      -1.183   0.500  -1.412  1.00  0.00
 Currently, we need to edit `middle.sh` each time we want to adjust the range of
 lines that is returned.
 Let's fix that by configuring our script to instead use three command-line arguments.
-After the first command-line argument (`$1`), each additional argument that we
+Each additional argument that we
 provide will be accessible via the special variables `$1`, `$2`, `$3`,
 which refer to the first, second, third command-line arguments, respectively.
 
@@ -177,16 +170,13 @@ head -n "$2" "$1" | tail -n "$3"
 We can now run:
 
 ~~~
-$ bash middle.sh pentane.pdb 15 5
+$ bash middle.sh shark.txt 10 2
 ~~~
 {: .language-bash}
 
 ~~~
-ATOM      9  H           1       1.324   0.350  -1.332  1.00  0.00
-ATOM     10  H           1       1.271   1.378   0.122  1.00  0.00
-ATOM     11  H           1      -0.074  -0.384   1.288  1.00  0.00
-ATOM     12  H           1      -0.048  -1.362  -0.205  1.00  0.00
-ATOM     13  H           1      -1.183   0.500  -1.412  1.00  0.00
+19586   Carcharodon_carcharias  0       Dicken_M._L._M._J._Smale_et_al._(2013)._White_sharks_Carcharodon_carcharias_at_Bird_Island_Algoa_Bay_South_Africa._African_Journal_of_Marine_Science_35(2):_175-182     Elasmobranchii  Lamniformes    Lamnidae Carcharodon     carcharias              (Linnaeus_1758) Great_white_shark       Bird_Island_Algoa_Bay_Eastern_Cape      South_Africa    South_Africa    Africa  NULL    NULL    -33.5   25.775554       1       Marine  NULL    NULL   NULL     NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census   NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    0.225   0.487   0       NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+19587   Carcharodon_carcharias  0       Ryklief_R._P._A._Pistorius_et_al._(2014)._Spatial_and_seasonal_patterns_in_sighting_rate_and_life-history_composition_of_the_white_shark_Carcharodon_carcharias_at_Mossel_Bay_South_Africa._African_Journal_of_Marine_Science_36(4):_449-453    Elasmobranchii  Lamniformes     Lamnidae        Carcharodon     carcharias     (Linnaeus_1758)  Great_white_shark       Seal_Island_Mossel_Bay_Western_Cape     South_Africa    South_Africa    Africa NULL     NULL    -34.151089      22.119689       1       Marine  NULL    NULL    NULL    NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       Sightings_per_unit_effort_SPUE_(**hr)   Visual_census_Feb-Dec   NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    1.6809  1.0745  2.1702 NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
 ~~~
 {: .output}
 
@@ -194,16 +184,14 @@ By changing the arguments to our command we can change our script's
 behaviour:
 
 ~~~
-$ bash middle.sh pentane.pdb 20 5
+$ bash middle.sh shark.txt 4 3
 ~~~
 {: .language-bash}
 
 ~~~
-ATOM     14  H           1      -1.259   1.420   0.112  1.00  0.00
-ATOM     15  H           1      -2.608  -0.407   1.130  1.00  0.00
-ATOM     16  H           1      -2.540  -1.303  -0.404  1.00  0.00
-ATOM     17  H           1      -3.393   0.254  -0.321  1.00  0.00
-TER      18              1
+7701    Carcharodon_carcharias  0       Dudley_S._F._J._(2002)._Shark_Catch_Trends_and_Effort_Reduction_in_the_Beach_Protection_Program_KwaZulu-Natal_South_Africa._SCIENTIFIC_COUNCIL_MEETING_-_SEPTEMBER_2002_NAFO._*_Dudley_S._F._J._and_C._A._Simpfendorfer_(2006)._Population_status_of_14_shark_species_caught_in_the_protective_gillnets_off_KwaZulu-Natal_beaches_South_Africa_1978-2003._Marine_and_Freshwater_Research_57:_225-240.   Elasmobranchii  Lamniformes     Lamnidae       Carcharodon      carcharias              (Linnaeus_1758) Great_white_shark       Beaches_of_KwaZulu-Natal_province_South_Africa  South_Africa    South_Africa    Africa  NULL    NULL    -29.25  33.08333        0       Marine  NULL    NULL   NULL     NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       number*km-net_year      shark_net_catch_rates   NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   1.8      1.6     1.4     0.9     0.6     0.6     1.4     1.1     0.75    0.7     0.9     1.4     0.9     0.5     0.7    0.9      1.12    1.19    0.99    0.65    0.25    1.1     0.55    0.65    0.87    1.37    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+9057    Carcharodon_carcharias  1       Cliff_G._S._F._J._Dudley_et_al._(1996)._Catches_of_white_sharks_in_KwaZulu-Natal_South_Africa_and_environmental_influences._Great_white_sharks:_the_biology_of_Carcharodon_carcharias._A._P._Klimley_and_D._G._Ainley:_351-362. Elasmobranchii  Lamniformes     Lamnidae        Carcharodon     carcharias      NULL    (Linnaeus_1758) Great_white_shark       Natal_Coast_South_Africa        South_Africa    South_Africa    Africa  NULL    NULL   -31.71667        30.38333        0       Marine  NULL    NULL    NULL    NULL    Tropical_and_subtropical_Indo-Pacific  Indian_Ocean     Unknown 0       CPUE_(no.*km-net*yr)    Shark_nets      NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    3.9     1.9     3.5     1.3     0.9    0.6      0.3     1.8     1.1     1.5     1.7     0.9     2.2     1.8     1.3     0.7     0.6     0.4     1.5     1.2    0.7      0.8     1       1.5     1       0.8     1.6     1.8     NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL
+9058    Carcharodon_carcharias  0       Cliff_G._S._F._J._Dudley_et_al._(1996)._Catches_of_white_sharks_in_KwaZulu-Natal_South_Africa_and_environmental_influences._Great_white_sharks:_the_biology_of_Carcharodon_carcharias._A._P._Klimley_and_D._G._Ainley:_351-362. Elasmobranchii  Lamniformes     Lamnidae        Carcharodon     carcharias      NULL    (Linnaeus_1758) Great_white_shark       Richards_Bay_South_Africa       South_Africa    South_Africa    Africa  NULL    NULL   -28.85   32.23333        0       Marine  NULL    NULL    NULL    NULL    Tropical_and_subtropical_Indo-Pacific   Indian_Ocean    Unknown 0       CPUE_(no.*km-net*yr)    Shark_nets      NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    5.2     3.5     1.5     2       2       2       1.1    1.8      3.2     1.4     0.5     1.1     2.9     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL   NULL     NULL    NULL
 ~~~
 {: .output}
 
@@ -231,10 +219,10 @@ you should check that the comment is still accurate:
 an explanation that sends the reader in the wrong direction is worse than none at all.
 
 What if we want to process many files in a single pipeline?
-For example, if we want to sort our `.pdb` files by length, we would type:
+For example, if we want to sort our `.txt` files by length, we would type:
 
 ~~~
-$ wc -l *.pdb | sort -n
+$ wc -l *.txt | sort -n
 ~~~
 {: .language-bash}
 
@@ -242,7 +230,7 @@ because `wc -l` lists the number of lines in the files
 (recall that `wc` stands for 'word count', adding the `-l` option means 'count lines' instead)
 and `sort -n` sorts things numerically.
 We could put this in a file,
-but then it would only ever sort a list of `.pdb` files in the current directory.
+but then it would only ever sort a list of `.txt` files in the current directory.
 If we want to be able to get a sorted list of other kinds of files,
 we need a way to get all those names into the script.
 We can't use `$1`, `$2`, and so on
@@ -269,45 +257,37 @@ wc -l "$@" | sort -n
 {: .source}
 
 ~~~
-$ bash sorted.sh *.pdb ../creatures/*.dat
+$ bash sorted.sh *.txt ../numbers.txt
 ~~~
 {: .language-bash}
 
 ~~~
-9 methane.pdb
-12 ethane.pdb
-15 propane.pdb
-20 cubane.pdb
-21 pentane.pdb
-30 octane.pdb
-163 ../creatures/basilisk.dat
-163 ../creatures/minotaur.dat
-163 ../creatures/unicorn.dat
-596 total
+    1 python.txt
+    3 bowerbird.txt
+    4 wildcat.txt
+    5 ../numbers.txt
+   11 dunnock.txt
+   18 shark.txt
+   20 toad.txt
+   62 total
 ~~~
 {: .output}
 
 > ## List Unique Species
 >
-> Leah has several hundred data files, each of which is formatted like this:
+> Remember, you can see the column headings for our population time series files as follows:
 >
 > ~~~
-> 2013-11-05,deer,5
-> 2013-11-05,rabbit,22
-> 2013-11-05,raccoon,7
-> 2013-11-06,rabbit,19
-> 2013-11-06,deer,2
-> 2013-11-06,fox,1
-> 2013-11-07,rabbit,18
-> 2013-11-07,bear,1
+> $ head -n 1 six-species.csv
 > ~~~
-> {: .source}
+> {: .language-bash}
 >
-> An example of this type of file is given in
-> `shell-lesson-data/exercise-data/animal-counts/animals.csv`.
+> Count manually to confirm that "Binomial" (the binomial species name) is the second column, and "Country" 
+> is the 15th column and "System" is the 22nd column.
 >
-> We can use the command `cut -d , -f 2 animals.csv | sort | uniq` to produce
-> the unique species in `animals.csv`.
+> We can use the command `cut -f 2,14,22 shark.txt | sort | uniq` to display
+> the unique combinations of species, country and system in `shark.txt`. (Note, the columns appear ragged due to 
+> the positioning of tab stops. But all the data are there.)
 > In order to avoid having to type out this series of commands every time,
 > a scientist may choose to write a shell script instead.
 >
@@ -318,16 +298,18 @@ $ bash sorted.sh *.pdb ../creatures/*.dat
 > > ## Solution
 > >
 > > ```
-> > # Script to find unique species in csv files where species is the second data field
-> > # This script accepts any number of file names as command line arguments
+> > # Script to find unique combinations of species, country and
+> > # system in tab-delimited text files where the data are in
+> > # columns 2, 14 and 22.
+> > # This script accepts any number of file names as command line arguments.
 > >
 > > # Loop over all files
 > > for file in $@
 > > do
-> >     echo "Unique species in $file:"
-> >     # Extract species names
-> >     cut -d , -f 2 $file | sort | uniq
-> > done
+> >    echo "Unique combinations of species, country and system within $file:"
+> >    # Extract binomial species names, countries and systems
+> >    cut -f 2,14,22 $file | sort | uniq
+done
 > > ```
 > > {: .language-bash}
 > {: .solution}
@@ -347,7 +329,7 @@ $ history | tail -n 5 > redo-figure-3.sh
 ~~~
 {: .language-bash}
 
-The file `redo-figure-3.sh` now contains:
+Depending on which commands we have typed recently, the file `redo-figure-3.sh` might now contain:
 
 ~~~
 297 bash goostats.sh NENE01729B.txt stats-NENE01729B.txt
@@ -392,83 +374,10 @@ what they discover about their data and their workflow with one call to `history
 and a bit of editing to clean up the output
 and save it as a shell script.
 
-## Nelle's Pipeline: Creating a Script
-
-
-Nelle's supervisor insisted that all her analytics must be reproducible.
-The easiest way to capture all the steps is in a script.
-
-First we return to Nelle's project directory:
-```
-$ cd ../../north-pacific-gyre/
-```
-{: .language-bash}
-
-She creates a file using `nano` ...
-
-~~~
-$ nano do-stats.sh
-~~~
-{: .language-bash}
-
-...which contains the following:
-
-~~~
-# Calculate stats for data files.
-for datafile in "$@"
-do
-    echo $datafile
-    bash goostats.sh $datafile stats-$datafile
-done
-~~~
-{: .language-bash}
-
-She saves this in a file called `do-stats.sh`
-so that she can now re-do the first stage of her analysis by typing:
-
-~~~
-$ bash do-stats.sh NENE*A.txt NENE*B.txt
-~~~
-{: .language-bash}
-
-She can also do this:
-
-~~~
-$ bash do-stats.sh NENE*A.txt NENE*B.txt | wc -l
-~~~
-{: .language-bash}
-
-so that the output is just the number of files processed
-rather than the names of the files that were processed.
-
-One thing to note about Nelle's script is that
-it lets the person running it decide what files to process.
-She could have written it as:
-
-~~~
-# Calculate stats for Site A and Site B data files.
-for datafile in NENE*A.txt NENE*B.txt
-do
-    echo $datafile
-    bash goostats.sh $datafile stats-$datafile
-done
-~~~
-{: .language-bash}
-
-The advantage is that this always selects the right files:
-she doesn't have to remember to exclude the 'Z' files.
-The disadvantage is that it *always* selects just those files --- she can't run it on all files
-(including the 'Z' files),
-or on the 'G' or 'H' files her colleagues in Antarctica are producing,
-without editing the script.
-If she wanted to be more adventurous,
-she could modify her script to check for command-line arguments,
-and use `NENE*A.txt NENE*B.txt` if none were provided.
-Of course, this introduces another tradeoff between flexibility and complexity.
 
 > ## Variables in Shell Scripts
 >
-> In the `proteins` directory, imagine you have a shell script called `script.sh` containing the
+> In the `populations` directory, imagine you have a shell script called `script.sh` containing the
 > following commands:
 >
 > ~~~
@@ -477,20 +386,21 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 > ~~~
 > {: .language-bash}
 >
-> While you are in the `proteins` directory, you type the following command:
+> While you are in the `populations` directory, you type the following command:
 >
 > ~~~
-> $ bash script.sh '*.pdb' 1 1
+> $ bash script.sh '*.txt' 1 1
 > ~~~
 > {: .language-bash}
 >
 > Which of the following outputs would you expect to see?
 >
-> 1. All of the lines between the first and the last lines of each file ending in `.pdb`
->    in the `proteins` directory
-> 2. The first and the last line of each file ending in `.pdb` in the `proteins` directory
-> 3. The first and the last line of each file in the `proteins` directory
-> 4. An error because of the quotes around `*.pdb`
+> 1. All of the lines between the first and the last lines of each file ending in `.txt`
+>    in the `populations` directory
+> 2. The first of each file ending in `.txt` in the `populations` directory, followed by
+>    the last line of each such file
+> 3. The first and the last line of each file in the `populations` directory
+> 4. An error because of the quotes around `*.txt`
 >
 > > ## Solution
 > > The correct answer is 2.
@@ -499,13 +409,16 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 > > script, such that the commands run are:
 > >
 > > ```
-> > $ head -n 1 cubane.pdb ethane.pdb octane.pdb pentane.pdb propane.pdb
-> > $ tail -n 1 cubane.pdb ethane.pdb octane.pdb pentane.pdb propane.pdb
+> > $ head -n 1 bowerbird.txt  dunnock.txt  python.txt  shark.txt  toad.txt  wildcat.txt
+> > $ tail -n 1 bowerbird.txt  dunnock.txt  python.txt  shark.txt  toad.txt  wildcat.txt
 > > ```
 > > {: .language-bash}
 > > The shell does not expand `'*.pdb'` because it is enclosed by quote marks.
-> > As such, the first argument to the script is `'*.pdb'` which gets expanded within the
+> > As such, the first argument to the script is `'*.txt'` which gets expanded within the
 > > script by `head` and `tail`.
+> >
+> > Note, `python.txt` only contains a single line, so for this file the line is output twice (being both
+> > the first line *and* the last line.)
 > {: .solution}
 {: .challenge}
 
@@ -517,11 +430,11 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 > with that extension. For example:
 >
 > ~~~
-> $ bash longest.sh shell-lesson-data/exercise-data/proteins pdb
+> $ bash longest.sh shell-lesson-data/exercise-data/populations txt
 > ~~~
 > {: .language-bash}
 >
-> would print the name of the `.pdb` file in `shell-lesson-data/exercise-data/proteins` that has
+> would print the name of the `.txt` file in `shell-lesson-data/exercise-data/populations` that has
 > the most lines.
 >
 > Feel free to test your script on another directory e.g.
@@ -539,11 +452,11 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 > > # and prints the name of the file in that directory
 > > # with the most lines which matches the file extension.
 > >
-> > wc -l $1/*.$2 | sort -n | tail -n 2 | head -n 1
+> > wc -l $1/*.$2 | sort -g | tail -n 2 | head -n 1
 > > ```
 > > {: .language-bash}
 > >
-> > The first part of the pipeline, `wc -l $1/*.$2 | sort -n`, counts
+> > The first part of the pipeline, `wc -l $1/*.$2 | sort -g`, counts
 > > the lines in each file and sorts them numerically (largest last). When
 > > there's more than one file, `wc` also outputs a final summary line,
 > > giving the total number of lines across _all_ files.  We use `tail
@@ -558,11 +471,11 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 
 > ## Script Reading Comprehension
 >
-> For this question, consider the `shell-lesson-data/exercise-data/proteins` directory once again.
-> This contains a number of `.pdb` files in addition to any other files you
+> For this question, consider the `shell-lesson-data/exercise-data/populations` directory once again.
+> This contains a number of files containing population time series data, in addition to any other files you
 > may have created.
 > Explain what each of the following three scripts would do when run as
-> `bash script1.sh *.pdb`, `bash script2.sh *.pdb`, and `bash script3.sh *.pdb` respectively.
+> `bash script1.sh *.txt`, `bash script2.sh *.txt`, and `bash script3.sh *.txt` respectively.
 >
 > ~~~
 > # Script 1
@@ -581,25 +494,25 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 >
 > ~~~
 > # Script 3
-> echo $@.pdb
+> echo $@.txt
 > ~~~
 > {: .language-bash}
 >
 > > ## Solutions
-> > In each case, the shell expands the wildcard in `*.pdb` before passing the resulting
+> > In each case, the shell expands the wildcard in `*.txt` before passing the resulting
 > > list of file names as arguments to the script.
 > >
 > > Script 1 would print out a list of all files containing a dot in their name.
 > > The arguments passed to the script are not actually used anywhere in the script.
 > >
-> > Script 2 would print the contents of the first 3 files with a `.pdb` file extension.
+> > Script 2 would print the contents of the first 3 files with a `.txt` file extension.
 > > `$1`, `$2`, and `$3` refer to the first, second, and third argument respectively.
 > >
-> > Script 3 would print all the arguments to the script (i.e. all the `.pdb` files),
-> > followed by `.pdb`.
+> > Script 3 would print all the arguments to the script (i.e. all the `.txt` files),
+> > followed by `.txt`.
 > > `$@` refers to *all* the arguments given to a shell script.
 > > ```
-> > cubane.pdb ethane.pdb methane.pdb octane.pdb pentane.pdb propane.pdb.pdb
+> > bowerbird.txt dunnock.txt python.txt script.txt shark.txt toad.txt wildcat.txt.txt
 > > ```
 > > {: .output}
 > {: .solution}
@@ -608,7 +521,7 @@ Of course, this introduces another tradeoff between flexibility and complexity.
 > ## Debugging Scripts
 >
 > Suppose you have saved the following script in a file called `do-errors.sh`
-> in Nelle's `north-pacific-gyre/scripts` directory:
+> in Phillipa's `north-pacific-gyre/scripts` directory:
 >
 > ~~~
 > # Calculate stats for data files.

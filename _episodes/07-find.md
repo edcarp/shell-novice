@@ -29,7 +29,7 @@ It is also the name of a very useful command-line program.
 For our examples,
 we will use a file that contains three haiku taken from a
 [1998 competition](https://web.archive.org/web/19991201042211/http://salon.com/21st/chal/1998/01/26chal.html)
-in *Salon* magazine (Credit to authors Bill Torcaso, Howard Korder, and 
+in *Salon* magazine (Credit to authors Joy Rothke, Howard Korder, and 
 Margaret Segall, respectively. See 
 Haiku Error Messsages archived
 [Page 1](https://web.archive.org/web/20000310061355/http://www.salon.com/21st/chal/1998/02/10chal2.html)
@@ -46,9 +46,9 @@ $ cat haiku.txt
 {: .language-bash}
 
 ~~~
-The Tao that is seen
-Is not the true Tao, until
-You bring fresh toner.
+The Web site you seek
+cannot be located but
+endless others exist.
 
 With searching comes loss
 and the presence of absence:
@@ -68,8 +68,8 @@ $ grep not haiku.txt
 {: .language-bash}
 
 ~~~
-Is not the true Tao, until
-"My Thesis" not found
+cannot be located but
+"My Thesis" not found.
 Today it is not working
 ~~~
 {: .output}
@@ -93,7 +93,7 @@ $ grep The haiku.txt
 {: .language-bash}
 
 ~~~
-The Tao that is seen
+The Web site you seek
 "My Thesis" not found.
 ~~~
 {: .output}
@@ -114,7 +114,7 @@ $ grep -w The haiku.txt
 {: .language-bash}
 
 ~~~
-The Tao that is seen
+The Web site you seek
 ~~~
 {: .output}
 
@@ -148,13 +148,14 @@ $ grep -n "it" haiku.txt
 {: .language-bash}
 
 ~~~
+1:The Web site you seek
 5:With searching comes loss
 9:Yesterday it worked
 10:Today it is not working
 ~~~
 {: .output}
 
-Here, we can see that lines 5, 9, and 10 contain the letters 'it'.
+Here, we can see that lines 1, 5, 9, and 10 contain the letters 'it'.
 
 We can combine options (i.e. flags) as we do with other Unix commands.
 For example, let's find the lines that contain the word 'the'.
@@ -167,7 +168,6 @@ $ grep -n -w "the" haiku.txt
 {: .language-bash}
 
 ~~~
-2:Is not the true Tao, until
 6:and the presence of absence:
 ~~~
 {: .output}
@@ -180,8 +180,7 @@ $ grep -n -w -i "the" haiku.txt
 {: .language-bash}
 
 ~~~
-1:The Tao that is seen
-2:Is not the true Tao, until
+1:The Web site you seek
 6:and the presence of absence:
 ~~~
 {: .output}
@@ -195,8 +194,9 @@ $ grep -n -w -v "the" haiku.txt
 {: .language-bash}
 
 ~~~
-1:The Tao that is seen
-3:You bring fresh toner.
+1:The Web site you seek
+2:cannot be located but
+3:endless others exist.
 4:
 5:With searching comes loss
 7:"My Thesis" not found.
@@ -219,10 +219,10 @@ $ grep -r Yesterday .
 {: .language-bash}
 
 ```
+./haiku.txt:Yesterday it worked
 ./LittleWomen.txt:"Yesterday, when Aunt was asleep and I was trying to be as still as a
 ./LittleWomen.txt:Yesterday at dinner, when an Austrian officer stared at us and then
 ./LittleWomen.txt:Yesterday was a quiet day spent in teaching, sewing, and writing in my
-./haiku.txt:Yesterday it worked
 ```
 {: .output}
 
@@ -272,7 +272,7 @@ Miscellaneous:
 >
 > > ## Solution
 > > The correct answer is 3, because the `-w` option looks only for whole-word matches.
-> > The other options will also match 'of' when part of another word.
+> > The other options will also match 'of' when part of another word (in this case, the word `Software`).
 > {: .solution}
 {: .challenge}
 
@@ -292,7 +292,6 @@ Miscellaneous:
 > {: .language-bash}
 >
 > ~~~
-> You bring fresh toner.
 > Today it is not working
 > Software is like that.
 > ~~~
@@ -305,75 +304,6 @@ Miscellaneous:
 > matches a single character (just like `?` in the shell), while the `o`
 > matches an actual 'o'.
 {: .callout}
-
-> ## Tracking a Species
->
-> Leah has several hundred
-> data files saved in one directory, each of which is formatted like this:
->
-> ~~~
-> 2012-11-05,deer,5
-> 2012-11-05,rabbit,22
-> 2012-11-05,raccoon,7
-> 2012-11-06,rabbit,19
-> 2012-11-06,deer,2
-> 2012-11-06,fox,4
-> 2012-11-07,rabbit,16
-> 2012-11-07,bear,1
-> ~~~
-> {: .source}
->
-> She wants to write a shell script that takes a species as the first command-line argument
-> and a directory as the second argument. The script should return one file called `<species>.txt`
-> containing a list of dates and the number of that species seen on each date.
-> For example using the data shown above, `rabbit.txt` would contain:
->
-> ~~~
-> 2012-11-05,22
-> 2012-11-06,19
-> 2012-11-07,16
-> ~~~
-> {: .source}
->
-> Below, each line contains an individual command, or pipe.  Arrange their
-> sequence in one command in order to achieve Leah's goal:
->
-> ~~~
-> cut -d : -f 2
-> >
-> |
-> grep -w $1 -r $2
-> |
-> $1.txt
-> cut -d , -f 1,3
-> ~~~
-> {: .language-bash}
->
-> Hint: use `man grep` to look for how to grep text recursively in a directory
-> and `man cut` to select more than one field in a line.
->
-> An example of such a file is provided in
-> `shell-lesson-data/exercise-data/animal-counts/animals.csv`
->
-> > ## Solution
-> >
-> > ```
-> > grep -w $1 -r $2 | cut -d : -f 2 | cut -d , -f 1,3 > $1.txt
-> > ```
-> > {: .source}
-> >
-> > Actually, you can swap the order of the two cut commands and it still works. At the
-> > command line, try changing the order of the cut commands, and have a look at the output
-> > from each step to see why this is the case.
-> >
-> > You would call the script above like this:
-> >
-> > ```
-> > $ bash count-species.sh bear .
-> > ```
-> > {: .language-bash}
-> {: .solution}
-{: .challenge}
 
 > ## Little Women
 >
@@ -434,28 +364,23 @@ directory tree shown below.
 
 ~~~
 .
-├── animal-counts/
-│   └── animals.csv
-├── creatures/
-│   ├── basilisk.dat
-│   ├── minotaur.dat
-│   └── unicorn.dat
 ├── numbers.txt
-├── proteins/
-│   ├── cubane.pdb
-│   ├── ethane.pdb
-│   ├── methane.pdb
-│   ├── octane.pdb
-│   ├── pentane.pdb
-│   └── propane.pdb
+├── populations/
+│   ├── bowerbird.txt
+│   ├── dunnock.txt
+│   ├── python.txt
+│   ├── shark.txt
+│   ├── six-species.csv
+│   └── wildcat.txt 
+|
 └── writing/
     ├── haiku.txt
     └── LittleWomen.txt
 ~~~
 {: .output}
 
-The `exercise-data` directory contains one file, `numbers.txt` and four directories:
-`animal-counts`, `creatures`, `proteins` and `writing` containing various files.
+The `exercise-data` directory contains one file, `numbers.txt`, and two directories:
+`populations` and `writing` containing various files.
 
 
 For our first command,
@@ -468,23 +393,18 @@ $ find .
 
 ~~~
 .
-./writing
-./writing/LittleWomen.txt
-./writing/haiku.txt
-./creatures
-./creatures/basilisk.dat
-./creatures/unicorn.dat
-./creatures/minotaur.dat
-./animal-counts
-./animal-counts/animals.csv
 ./numbers.txt
-./proteins
-./proteins/ethane.pdb
-./proteins/propane.pdb
-./proteins/octane.pdb
-./proteins/pentane.pdb
-./proteins/methane.pdb
-./proteins/cubane.pdb
+./populations
+./populations/bowerbird.txt
+./populations/dunnock.txt
+./populations/python.txt
+./populations/shark.txt
+./populations/six-species.csv
+./populations/toad.txt
+./populations/wildcat.txt
+./writing
+./writing/haiku.txt
+./writing/LittleWomen.txt
 ~~~
 {: .output}
 
@@ -508,10 +428,8 @@ $ find . -type d
 
 ~~~
 .
+./populations
 ./writing
-./creatures
-./animal-counts
-./proteins
 ~~~
 {: .output}
 
@@ -525,19 +443,16 @@ $ find . -type f
 {: .language-bash}
 
 ~~~
-./writing/LittleWomen.txt
-./writing/haiku.txt
-./creatures/basilisk.dat
-./creatures/unicorn.dat
-./creatures/minotaur.dat
-./animal-counts/animals.csv
 ./numbers.txt
-./proteins/ethane.pdb
-./proteins/propane.pdb
-./proteins/octane.pdb
-./proteins/pentane.pdb
-./proteins/methane.pdb
-./proteins/cubane.pdb
+./populations/bowerbird.txt
+./populations/dunnock.txt
+./populations/python.txt
+./populations/shark.txt
+./populations/six-species.csv
+./populations/toad.txt
+./populations/wildcat.txt
+./writing/haiku.txt
+./writing/LittleWomen.txt
 ~~~
 {: .output}
 
@@ -578,9 +493,15 @@ $ find . -name "*.txt"
 {: .language-bash}
 
 ~~~
-./writing/LittleWomen.txt
-./writing/haiku.txt
 ./numbers.txt
+./populations/bowerbird.txt
+./populations/dunnock.txt
+./populations/python.txt
+./populations/shark.txt
+./populations/toad.txt
+./populations/wildcat.txt
+./writing/haiku.txt
+./writing/LittleWomen.txt
 ~~~
 {: .output}
 
@@ -608,21 +529,27 @@ $ wc -l $(find . -name "*.txt")
 {: .language-bash}
 
 ~~~
-  21022 ./writing/LittleWomen.txt
-     11 ./writing/haiku.txt
       5 ./numbers.txt
-  21038 total
+      3 ./populations/bowerbird.txt
+     11 ./populations/dunnock.txt
+      1 ./populations/python.txt
+     18 ./populations/shark.txt
+     20 ./populations/toad.txt
+      4 ./populations/wildcat.txt
+     11 ./writing/haiku.txt
+  21022 ./writing/LittleWomen.txt
+  21095 total
 ~~~
 {: .output}
 
 When the shell executes this command,
 the first thing it does is run whatever is inside the `$()`.
 It then replaces the `$()` expression with that command's output.
-Since the output of `find` is the three filenames `./writing/LittleWomen.txt`,
-`./writing/haiku.txt`, and `./numbers.txt`, the shell constructs the command:
+Since the output of `find` is the nine filenames ending in `.txt` -- `./numbers.txt`, `./populations/bowerbird.txt`,
+`./populations/dunnock.txt`,  and so on -- the shell constructs the command:
 
 ~~~
-$ wc -l ./writing/LittleWomen.txt ./writing/haiku.txt ./numbers.txt
+$ wc -l ./numbers.txt ./populations/bowerbird.txt ./populations/dunnock.txt ./populations/python.txt ./populations/shark.txt ./populations/toad.txt ./populations/wildcat.txt ./writing/haiku.txt ./writing/LittleWomen.txt
 ~~~
 {: .language-bash}
 
@@ -642,8 +569,8 @@ $ grep "searching" $(find . -name "*.txt")
 {: .language-bash}
 
 ~~~
-./writing/LittleWomen.txt:sitting on the top step, affected to be searching for her book, but was
 ./writing/haiku.txt:With searching comes loss
+./writing/LittleWomen.txt:sitting on the top step, affected to be searching for her book, but was
 ~~~
 {: .output}
 
@@ -651,28 +578,29 @@ $ grep "searching" $(find . -name "*.txt")
 >
 > The `-v` option to `grep` inverts pattern matching, so that only lines
 > which do *not* match the pattern are printed. Given that, which of
-> the following commands will find all .dat files in `creatures`
-> except `unicorn.dat`?
+> the following commands will find all .txt files in `populations` 
+> except `toad.txt`?
 > Once you have thought about your answer, you can test the commands in the
 > `shell-lesson-data/exercise-data` directory.
->
-> 1.  `find creatures -name "*.dat" | grep -v unicorn`
-> 2.  `find creatures -name *.dat | grep -v unicorn`
-> 3.  `grep -v "unicorn" $(find creatures -name "*.dat")`
+> 
+> 1.  `find populations -name "*.txt" | grep -v toad`
+> 2.  `find populations -name *.txt | grep -v toad`
+> 3.  `grep -v "toad" $(find populations -name "*.txt")`
 > 4.  None of the above.
 >
 > > ## Solution
 > > Option 1. is correct. Putting the match expression in quotes prevents the shell
 > > expanding it, so it gets passed to the `find` command.
 > >
-> > Option 2 is also works in this instance because the shell tries to expand `*.dat`
-> > but there are no `*.dat` files in the current directory,
+> > Option 2 would also works in this instance if there were no `*.txt` files in the current directory.
+> > In this case, the shell tries to expand `*.txt`
+> > but  finds no match,
 > > so the wildcard expression gets passed to `find`.
-> > We first encountered this in
-> > [episode 3]({{ page.root }}{% link _episodes/03-create.md %}/#wildcards).
+> > (We first encountered this in
+> > Episode 3.)
 > >
 > > Option 3 is incorrect because it searches the contents of the files for lines which
-> > do not match 'unicorn', rather than searching the file names.
+> > do not match 'toad', rather than searching the file names.
 > {: .solution}
 {: .challenge}
 
@@ -704,23 +632,20 @@ may be cryptic, but people who have mastered it can experiment with
 different commands interactively, then use what they have learned to
 automate their work. Graphical user interfaces may be easier to use at
 first, but once learned, the productivity in the shell is unbeatable.
-And as Alfred North Whitehead wrote in 1911, 'Civilization advances by
-extending the number of important operations which we can perform
-without thinking about them.'
 
 > ## `find` Pipeline Reading Comprehension
 > 
 > Write a short explanatory comment for the following shell script:
 >
 > ~~~
-> wc -l $(find . -name "*.dat") | sort -n
+> wc -l $(find . -name "*.csv") | sort -n
 > ~~~
 > {: .language-bash}
 >
 > > ## Solution
-> > 1. Find all files with a `.dat` extension recursively from the current directory
+> > 1. Find all files with a `.csv` extension recursively from the current directory
 > > 2. Count the number of lines each of these files contains
-> > 3. Sort the output from step 2. numerically
+> > 3. Sort the output from step 2 numerically
 > {: .solution}
 {: .challenge}
 

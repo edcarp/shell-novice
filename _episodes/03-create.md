@@ -38,7 +38,7 @@ $ pwd
 {: .language-bash}
 
 ~~~
-/Users/nelle/Desktop/shell-lesson-data
+/Users/phillipa/Desktop/shell-lesson-data
 ~~~
 {: .output}
 
@@ -138,8 +138,8 @@ data/  results/
 >    Spaces can make a name more meaningful,
 >    but since spaces are used to separate arguments on the command line
 >    it is better to avoid them in names of files and directories.
->    You can use `-` or `_` instead (e.g. `north-pacific-gyre/` rather than `north pacific gyre/`).
->    To test this out, try typing `mkdir north pacific gyre`and see what directory (or directories!)
+>    You can use `-` or `_` instead (e.g. you might use `population-data/` rather than `population data/`).
+>    To test this out, try typing `mkdir population data`and see what directory (or directories!)
 >    are made when you check with `ls -F`.
 >
 > 2. Don't begin the name with `-` (dash).
@@ -286,7 +286,7 @@ draft.txt
 
 > ## What's In A Name?
 >
-> You may have noticed that all of Nelle's files are named 'something dot
+> You may have noticed that all of Phillipa's files are named 'something dot
 > something', and in this part of the lesson, we always used the extension
 > `.txt`.  This is just a convention: we can call a file `mythesis` or
 > almost anything else we want. However, most people use two-part names
@@ -654,23 +654,23 @@ or specifying a naming pattern using wildcards.
 >
 > ~~~
 > $ mkdir backup
-> $ cp creatures/minotaur.dat creatures/unicorn.dat backup/
+> $ cp populations/six-species.csv populations/dunnock.txt backup/
 > ~~~
 > {: .language-bash}
 >
 > In the example below, what does `cp` do when given three or more file names?
 >
 > ~~~
-> $ cd creatures
+> $ cd populations
 > $ ls -F
 > ~~~
 > {: .language-bash}
 > ~~~
-> basilisk.dat  minotaur.dat  unicorn.dat
+> bowerbird.txt  dunnock.txt  python.txt  script.txt  shark.txt  six-species.csv  toad.txt  wildcat.txt
 > ~~~
 > {: .output}
 > ~~~
-> $ cp minotaur.dat unicorn.dat basilisk.dat
+> $ cp bowerbird.txt  dunnock.txt  python.txt
 > ~~~
 > {: .language-bash}
 >
@@ -683,7 +683,7 @@ or specifying a naming pattern using wildcards.
 > > because it is expecting a directory name as the last argument.
 > >
 > > ```
-> > cp: target 'basilisk.dat' is not a directory
+> > cp: target 'python.txt' is not a directory
 > > ```
 > > {: .error}
 > {: .solution}
@@ -694,26 +694,26 @@ or specifying a naming pattern using wildcards.
 > ## Wildcards
 >
 > `*` is a **wildcard**, which matches zero or more  characters.
-> Let's consider the `shell-lesson-data/exercise-data/proteins` directory:
-> `*.pdb` matches `ethane.pdb`, `propane.pdb`, and every
-> file that ends with '.pdb'. On the other hand, `p*.pdb` only matches
-> `pentane.pdb` and `propane.pdb`, because the 'p' at the front only
-> matches filenames that begin with the letter 'p'.
+> Let's consider the `shell-lesson-data/exercise-data/populations` directory:
+> `*.txt` matches `bowerbird.txt`, `dunnock.txt`, and every
+> file that ends with '.txt'. On the other hand, `b*.txt` only matches
+> `bowerbird.txt`, because the 'b' at the front only
+> matches filenames that begin with the letter 'b'.
 >
 > `?` is also a wildcard, but it matches exactly one character.
-> So `?ethane.pdb` would match `methane.pdb` whereas
-> `*ethane.pdb` matches both `ethane.pdb`, and `methane.pdb`.
+> So `?unnock.txt` would match `dunnock.txt` whereas
+> `*k.txt` matches both `dunnock.txt` and `shark.txt`.
 >
 > Wildcards can be used in combination with each other
-> e.g. `???ane.pdb` matches three characters followed by `ane.pdb`,
-> giving `cubane.pdb  ethane.pdb  octane.pdb`.
+> e.g. `????k.txt` matches three characters followed by `k.txt`,
+> giving `shark.txt`.
 >
 > When the shell sees a wildcard, it expands the wildcard to create a
 > list of matching filenames *before* running the command that was
 > asked for. As an exception, if a wildcard expression does not match
 > any file, Bash will pass the expression as an argument to the command
-> as it is. For example, typing `ls *.pdf` in the `proteins` directory
-> (which contains only files with names ending with `.pdb`) results in
+> as it is. For example, typing `ls *.pdf` in the `populations` directory
+> (which contains only files with names ending with `.txt` or `.csv`) results in
 > an error message that there is no file called `*.pdf`.
 > However, generally commands like `wc` and `ls` see the lists of
 > file names matching these expressions, but not the wildcards
@@ -723,34 +723,37 @@ or specifying a naming pattern using wildcards.
 
 > ## List filenames matching a pattern
 >
-> When run in the `proteins` directory, which `ls` command(s) will
+> When run in the `populations` directory, which `ls` command(s) will
 > produce this output?
 >
-> `ethane.pdb   methane.pdb`
+> `dunnock.txt  toad.txt`
 >
-> 1. `ls *t*ane.pdb`
-> 2. `ls *t?ne.*`
-> 3. `ls *t??ne.pdb`
-> 4. `ls ethane.*`
+> 1. `ls *.*`
+> 2. `ls *o*`
+> 3. `ls *o??.*`
+> 4. `ls dunnock?toad.*`
 >
 > > ## Solution
 >>  The solution is `3.`
 >>
 >> `1.` shows all files whose names contain zero or more characters (`*`)
->> followed by the letter `t`,
->> then zero or more characters (`*`) followed by `ane.pdb`.
->> This gives `ethane.pdb  methane.pdb  octane.pdb  pentane.pdb`.
+>> followed by the full stop `.`,
+>> then zero or more characters (`*`).
+>> This gives
+>> `bowerbird.txt  dunnock.txt  python.txt  shark.txt  six-species.csv  toad.txt  wildcat.txt`.
 >>
 >> `2.` shows all files whose names start with zero or more characters (`*`) followed by
->> the letter `t`,
->> then a single character (`?`), then `ne.` followed by zero or more characters (`*`).
->> This will give us `octane.pdb` and `pentane.pdb` but doesn't match anything
->> which ends in `thane.pdb`.
+>> the letter `o`,
+>> followed by zero or more characters (`*`). In other words, it shows all files whose names contain the letter `o`.
+>> This gives us `bowerbird.txt  dunnock.txt  python.txt  toad.txt`.
 >>
->> `3.` fixes the problems of option 2 by matching two characters (`??`) between `t` and `ne`.
+>> `3.` is more specific than option 2 by matching zero or more
+>> characters (`*`), followed by the letter `o`, followed by any two characters (`??`), followed by a full stop `.`,
+>> followed by zero or more characters (`*`).
 >> This is the solution.
 >>
->> `4.` only shows files starting with `ethane.`.
+>> `4.` only shows files starting with `dunnock`, followed by any single character (`?`), followed by `toad.`, followed by
+>> zero or more characters (`*`). No files in the directory match these criteria.
 > {: .solution}
 {: .challenge}
 
