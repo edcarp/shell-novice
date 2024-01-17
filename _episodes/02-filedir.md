@@ -814,7 +814,7 @@ she will call her files `NENE01729A.txt`, `NENE01812A.txt`, and so on.
 All 1520 files will go into the same directory. -->
 
 
-Now in her current directory `shell-lesson-data`,
+In the directory `shell-lesson-data/exercise-data`,
 Phillipa can see what files she has using the command:
 
 ~~~
